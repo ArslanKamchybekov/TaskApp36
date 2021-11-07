@@ -1,7 +1,10 @@
-package kg.geektech.taskapp36;
+package kg.geektech.taskapp36.ui.profile;
+
+import static android.content.Context.MODE_PRIVATE;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -28,6 +31,7 @@ import kg.geektech.taskapp36.databinding.FragmentProfileBinding;
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
+    private SharedPreferences sharedPreferences;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,14 +44,24 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setListeners();
+
+//        SharedPreferences preferences = getContext().getSharedPreferences("info", MODE_PRIVATE);
+//        preferences.edit().putString("name", binding.editName.getText().toString());
+//        SharedPreferences.Editor editor = preferences.edit();
+//        editor.putString("name")
+    }
+
+    private void setListeners() {
         binding.imageProfile.setOnClickListener(view1 -> {
-            Intent intent = new Intent(Intent.ACTION_PICK);
-            intent.setType("image/*");
-            binding.addSign.setVisibility(View.GONE);
-            binding.textAddImage.setVisibility(View.GONE);
-            galleryActivityResultLauncher.launch(intent);
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        binding.addSign.setVisibility(View.GONE);
+        binding.textAddImage.setVisibility(View.GONE);
+        galleryActivityResultLauncher.launch(intent);
         });
     }
+
     private ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {

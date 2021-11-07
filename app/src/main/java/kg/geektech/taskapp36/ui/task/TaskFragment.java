@@ -1,4 +1,4 @@
-package kg.geektech.taskapp36;
+package kg.geektech.taskapp36.ui.task;
 
 import android.os.Bundle;
 
@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import kg.geektech.taskapp36.R;
 import kg.geektech.taskapp36.databinding.FragmentTaskBinding;
 import kg.geektech.taskapp36.models.Task;
 
@@ -31,6 +32,10 @@ public class TaskFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initListeners();
+    }
+
+    private void initListeners() {
         binding.btnSave.setOnClickListener(view1 -> {
             save();
         });

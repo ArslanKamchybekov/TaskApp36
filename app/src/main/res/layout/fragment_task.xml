@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".TaskFragment"
-    android:padding="16dp"
+    android:gravity="center"
     android:orientation="vertical"
-    android:gravity="center">
+    android:padding="16dp"
+    tools:context=".ui.task.TaskFragment">
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -18,8 +18,7 @@
             android:id="@+id/editText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Введите задачу"
-            />
+            android:hint="Введите задачу" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSave"
@@ -28,8 +27,6 @@
             android:text="Save"
             android:textAllCaps="false"
             app:cornerRadius="8sp" />
-
-
 
     </com.google.android.material.textfield.TextInputLayout>
 
