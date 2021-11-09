@@ -42,10 +42,8 @@ public class TaskFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initListeners();
-        if (task != null){
+        if (task != null) {
             binding.editText.setText(task.getText());
-        }else {
-            Toast.makeText(requireContext(), "Type your task", Toast.LENGTH_SHORT).show();
         }
     }
 
