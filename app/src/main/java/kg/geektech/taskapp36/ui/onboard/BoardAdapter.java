@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -47,13 +48,10 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> 
         
         public ViewHolder(@NonNull ListBoardBinding itemView) {
             super(itemView.getRoot());
-            binding.btnStart.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Prefs prefs = new Prefs(view.getContext());
-                    prefs.saveBoardState();
-                    Navigation.findNavController(itemView.getRoot()).navigate(R.id.navigation_home);
-                }
+            binding.btnStart.setOnClickListener(view -> {
+                Prefs prefs = new Prefs(view.getContext());
+                prefs.saveBoardState();
+                Navigation.findNavController(itemView.getRoot()).navigate(R.id.navigation_home);
             });
         }
 

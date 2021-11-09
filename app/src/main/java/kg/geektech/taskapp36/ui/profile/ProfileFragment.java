@@ -31,7 +31,8 @@ import kg.geektech.taskapp36.databinding.FragmentProfileBinding;
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
-    private SharedPreferences sharedPreferences;
+    public static final String SHARED_PREF = "shared";
+    public static final String TEXT = "text";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,21 +46,37 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setListeners();
-
-//        SharedPreferences preferences = getContext().getSharedPreferences("info", MODE_PRIVATE);
-//        preferences.edit().putString("name", binding.editName.getText().toString());
-//        SharedPreferences.Editor editor = preferences.edit();
-//        editor.putString("name")
     }
 
     private void setListeners() {
         binding.imageProfile.setOnClickListener(view1 -> {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        binding.addSign.setVisibility(View.GONE);
-        binding.textAddImage.setVisibility(View.GONE);
-        galleryActivityResultLauncher.launch(intent);
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            binding.addSign.setVisibility(View.GONE);
+            binding.textAddImage.setVisibility(View.GONE);
+            galleryActivityResultLauncher.launch(intent);
         });
+
+        binding.editName.setOnClickListener(view -> {
+            String getString = binding.editName.getText().toString().trim();
+            binding.editName.setText(getString);
+
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(TEXT, binding.editName.getText().toString());
+            editor.apply();
+        });
+        updateName();
+    }
+
+    private void updateName() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
+        String text = sharedPreferences.getString(TEXT, "");
+        binding.editName.setText(text);
+    }
+
+    private void updateImg() {
+
     }
 
     private ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
@@ -70,11 +87,10 @@ public class ProfileFragment extends Fragment {
                     if (result.getResultCode() == Activity.RESULT_OK){
                         Intent data = result.getData();
                         Uri imageUri = data.getData();
-
                         binding.imageProfile.setImageURI(imageUri);
                     }
                     else {
-                        Toast.makeText(requireContext(), "Cancelled...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), "Ошибка", Toast.LENGTH_SHORT).show();
                     }
                 }
             }

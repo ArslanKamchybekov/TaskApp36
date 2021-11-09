@@ -4,9 +4,11 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     private ArrayList<Task> list;
     private OnItemClickListener onItemClickListener;
+    private EditText editText;
 
     public TaskAdapter() {
         list = new ArrayList<>();
@@ -28,18 +31,19 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_task, parent, false);
+        editText = view.findViewById(R.id.editText);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.bind(list.get(position));
-        if(position == -1){
-            holder.itemView.setBackgroundColor(Color.parseColor("#567845"));
-            holder.textTitle.setTextColor(Color.parseColor("#ffffff"));
-        }else {
+        if(position % 2 == 0){
             holder.itemView.setBackgroundColor(Color.parseColor("#ffffff"));
             holder.textTitle.setTextColor(Color.parseColor("#000000"));
+        }else {
+            holder.itemView.setBackgroundColor(Color.parseColor("#567845"));
+            holder.textTitle.setTextColor(Color.parseColor("#ffffff"));
         }
     }
 
@@ -51,6 +55,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     public void addItem(Task task) {
         list.add(0,task);
         notifyItemInserted(list.indexOf(task));
+    }
+
+    public void editItem(Task task, int position){
+        list.set(position, task);
+        notifyDataSetChanged();
+    }
+
+    public Task getItem(int position){
+        return list.get(position);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -75,7 +88,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
                 return true;
             });
         }
-
         public void bind(Task task) {
             textTitle.setText(task.getText());
         }

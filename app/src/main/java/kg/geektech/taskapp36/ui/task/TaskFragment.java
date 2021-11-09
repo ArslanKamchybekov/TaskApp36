@@ -11,6 +11,7 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import kg.geektech.taskapp36.R;
 import kg.geektech.taskapp36.databinding.FragmentTaskBinding;
@@ -20,6 +21,14 @@ import kg.geektech.taskapp36.models.Task;
 public class TaskFragment extends Fragment {
 
     private FragmentTaskBinding binding;
+    private Task task;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        task = (Task) requireArguments().getSerializable("task1");
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,6 +42,11 @@ public class TaskFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initListeners();
+        if (task != null){
+            binding.editText.setText(task.getText());
+        }else {
+            Toast.makeText(requireContext(), "Type your task", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void initListeners() {
@@ -45,10 +59,15 @@ public class TaskFragment extends Fragment {
         String text = binding.editText.getText().toString().trim();
         Task task = new Task(text, System.currentTimeMillis());
         Bundle bundle = new Bundle();
-        bundle.putSerializable("task", task);
+        if (this.task != null){
+            bundle.putSerializable("updated", task);
+        }else{
+            bundle.putSerializable("task", task);
+        }
         getParentFragmentManager().setFragmentResult("rk_task", bundle);
         close();
     }
+
     private void close() {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
         navController.navigateUp();

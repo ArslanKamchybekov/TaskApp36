@@ -24,6 +24,8 @@ public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     private TaskAdapter adapter;
+    private Task task;
+    private int pos;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -40,7 +42,9 @@ public class HomeFragment extends Fragment {
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onClick(int position) {
-
+                pos = position;
+                Task task = adapter.getItem(position);
+                openFragment(task);
             }
 
             @Override
@@ -55,13 +59,15 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initList();
         binding.fab.setOnClickListener(view1 -> {
-            openFragment();
+            pos = -1;
+            openFragment(null);
         });
-        getParentFragmentManager().setFragmentResultListener("rk_task", getViewLifecycleOwner(), new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                Task task = (Task) result.getSerializable("task");
-                Log.e("Home", "result = " + task.getText());
+        getParentFragmentManager().setFragmentResultListener("rk_task", getViewLifecycleOwner(), (requestKey, result) -> {
+            task = (Task) result.getSerializable("task");
+            if (result.getSerializable("updated") != null){
+                task = (Task) result.getSerializable("updated");
+                adapter.editItem(task, pos);
+            }else {
                 adapter.addItem(task);
             }
         });
@@ -72,8 +78,10 @@ public class HomeFragment extends Fragment {
         binding.recyclerView.addItemDecoration(new DividerItemDecoration(binding.recyclerView.getContext(), DividerItemDecoration.VERTICAL));
     }
 
-    private void openFragment() {
+    private void openFragment(Task task) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("task1", task);
         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
-        navController.navigate(R.id.taskFragment);
+        navController.navigate(R.id.taskFragment, bundle);
     }
 }
