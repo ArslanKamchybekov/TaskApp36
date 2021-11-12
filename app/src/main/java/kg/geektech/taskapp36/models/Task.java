@@ -1,15 +1,31 @@
 package kg.geektech.taskapp36.models;
 
-import java.io.Serializable;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+import java.util.Comparator;
+import java.util.List;
+
+@Entity
 public class Task implements Serializable {
 
+    @PrimaryKey(autoGenerate = true)
+    private long id;
     private String text;
     private long createdAt;
 
     public Task(String text, long createdAt) {
         this.text = text;
         this.createdAt = createdAt;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getText() {
@@ -28,3 +44,5 @@ public class Task implements Serializable {
         this.createdAt = createdAt;
     }
 }
+
+

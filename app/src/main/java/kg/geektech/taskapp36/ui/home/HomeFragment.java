@@ -1,19 +1,29 @@
 package kg.geektech.taskapp36.ui.home;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+import kg.geektech.App;
 import kg.geektech.taskapp36.R;
 import kg.geektech.taskapp36.databinding.FragmentHomeBinding;
 import kg.geektech.taskapp36.interfaces.OnItemClickListener;
@@ -26,6 +36,7 @@ public class HomeFragment extends Fragment {
     private TaskAdapter adapter;
     private Task task;
     private int pos;
+    private boolean checker;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -38,17 +49,22 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         adapter = new TaskAdapter();
+        adapter.addItems(App.getInstance().getDatabase().taskDao().getAll());
+        adapter.lastToTop();
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onClick(int position) {
                 pos = position;
-                Task task = adapter.getItem(position);
+                task = adapter.getItem(position);
                 openFragment(task);
             }
 
             @Override
             public void onLongClick(int position) {
+                task = adapter.getItem(position);
+                App.getInstance().getDatabase().taskDao().delete(task);
                 adapter.removeItem(position);
             }
         });
@@ -64,10 +80,10 @@ public class HomeFragment extends Fragment {
         });
         getParentFragmentManager().setFragmentResultListener("rk_task", getViewLifecycleOwner(), (requestKey, result) -> {
             task = (Task) result.getSerializable("task");
-            if (result.getSerializable("updated") != null){
+            if (result.getSerializable("updated") != null) {
                 task = (Task) result.getSerializable("updated");
                 adapter.editItem(task, pos);
-            }else {
+            } else {
                 adapter.addItem(task);
             }
         });
@@ -75,7 +91,6 @@ public class HomeFragment extends Fragment {
 
     private void initList() {
         binding.recyclerView.setAdapter(adapter);
-        binding.recyclerView.addItemDecoration(new DividerItemDecoration(binding.recyclerView.getContext(), DividerItemDecoration.VERTICAL));
     }
 
     private void openFragment(Task task) {
@@ -83,5 +98,28 @@ public class HomeFragment extends Fragment {
         bundle.putSerializable("task1", task);
         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
         navController.navigate(R.id.taskFragment, bundle);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.options_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.fromAToZ) {
+            if (!checker) {
+                adapter.fromAToZ();
+                checker = true;
+            }
+            return true;
+        } else if (item.getItemId() == R.id.defaultList) {
+            adapter.clearList();
+            adapter.addItems(App.getInstance().getDatabase().taskDao().getAll());
+            adapter.lastToTop();
+            checker = false;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

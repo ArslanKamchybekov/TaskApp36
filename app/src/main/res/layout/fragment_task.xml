@@ -12,12 +12,18 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:endIconMode="clear_text">
+        app:endIconMode="clear_text"
+        app:counterMaxLength="60"
+        app:counterTextColor="@color/error"
+        app:counterEnabled="true"
+        app:boxCornerRadiusTopStart="8sp"
+        app:boxCornerRadiusTopEnd="8sp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColorHint="@color/white"
             android:hint="Введите задачу" />
 
         <com.google.android.material.button.MaterialButton
@@ -25,7 +31,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Save"
-            android:textAllCaps="false"
             app:cornerRadius="8sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
