@@ -5,6 +5,9 @@
       <map>
         <entry key="..\:/Projects/TaskApp36/app/src/main/res/drawable/background_image.xml" value="0.2703125" />
         <entry key="..\:/Projects/TaskApp36/app/src/main/res/drawable/fields.xml" value="0.264" />
+        <entry key="..\:/Projects/TaskApp36/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.2703125" />
+        <entry key="..\:/Projects/TaskApp36/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.2703125" />
+        <entry key="..\:/Projects/TaskApp36/app/src/main/res/drawable/ic_next.xml" value="0.2703125" />
         <entry key="..\:/Projects/TaskApp36/app/src/main/res/drawable/tab_indicator_default.xml" value="0.2703125" />
         <entry key="..\:/Projects/TaskApp36/app/src/main/res/drawable/tab_indicator_selected.xml" value="0.2703125" />
         <entry key="..\:/Projects/TaskApp36/app/src/main/res/drawable/tab_selector.xml" value="0.2703125" />
@@ -12,12 +15,14 @@
         <entry key="..\:/Projects/TaskApp36/app/src/main/res/layout/fragment_board.xml" value="0.25416666666666665" />
         <entry key="..\:/Projects/TaskApp36/app/src/main/res/layout/fragment_dashboard.xml" value="0.25416666666666665" />
         <entry key="..\:/Projects/TaskApp36/app/src/main/res/layout/fragment_home.xml" value="0.25416666666666665" />
+        <entry key="..\:/Projects/TaskApp36/app/src/main/res/layout/fragment_login.xml" value="0.25416666666666665" />
         <entry key="..\:/Projects/TaskApp36/app/src/main/res/layout/fragment_profile.xml" value="0.25416666666666665" />
         <entry key="..\:/Projects/TaskApp36/app/src/main/res/layout/fragment_task.xml" value="0.25416666666666665" />
         <entry key="..\:/Projects/TaskApp36/app/src/main/res/layout/list_board.xml" value="0.25416666666666665" />
         <entry key="..\:/Projects/TaskApp36/app/src/main/res/layout/list_task.xml" value="0.25416666666666665" />
         <entry key="..\:/Projects/TaskApp36/app/src/main/res/menu/bottom_nav_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Projects/TaskApp36/app/src/main/res/menu/options_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Projects/TaskApp36/app/src/main/res/menu/sign_out.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>

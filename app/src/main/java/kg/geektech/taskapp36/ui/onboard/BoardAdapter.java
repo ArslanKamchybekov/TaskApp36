@@ -51,7 +51,7 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> 
             binding.btnStart.setOnClickListener(view -> {
                 Prefs prefs = new Prefs(view.getContext());
                 prefs.saveBoardState();
-                Navigation.findNavController(itemView.getRoot()).navigate(R.id.navigation_home);
+                Navigation.findNavController(itemView.getRoot()).navigate(R.id.loginFragment);
             });
         }
 

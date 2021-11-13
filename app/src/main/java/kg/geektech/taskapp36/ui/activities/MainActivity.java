@@ -1,25 +1,22 @@
 package kg.geektech.taskapp36.ui.activities;
 
-import android.app.ActionBar;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import kg.geektech.taskapp36.prefs.Prefs;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+
 import kg.geektech.taskapp36.R;
 import kg.geektech.taskapp36.databinding.ActivityMainBinding;
+import kg.geektech.taskapp36.prefs.Prefs;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,16 +39,23 @@ public class MainActivity extends AppCompatActivity {
         Prefs prefs = new Prefs(this);
 
 
-        if (! prefs.isBoardShown()) {
+        if (!prefs.isBoardShown()) {
             navController.navigate(R.id.boardFragment);
+        }else {
+            if (FirebaseAuth.getInstance().getCurrentUser() != null){
+                navController.navigate(R.id.navigation_home);
+            }else {
+                navController.navigate(R.id.loginFragment);
+            }
         }
+
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             if (destination.getId() == R.id.navigation_home || destination.getId() == R.id.navigation_dashboard || destination.getId() == R.id.navigation_profile || destination.getId() == R.id.navigation_notifications){
                 binding.navView.setVisibility(View.VISIBLE);
             }else {
                 binding.navView.setVisibility(View.GONE);
             }
-            if (destination.getId() == R.id.boardFragment){
+            if (destination.getId() == R.id.boardFragment || destination.getId() == R.id.loginFragment){
                 getSupportActionBar().hide();
             }else {
                 getSupportActionBar().show();

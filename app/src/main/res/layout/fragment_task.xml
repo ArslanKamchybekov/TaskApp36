@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:gravity="center|top"
     android:orientation="vertical"
     android:padding="16dp"
     tools:context=".ui.task.TaskFragment">
@@ -12,6 +12,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="50sp"
         app:endIconMode="clear_text"
         app:counterMaxLength="60"
         app:counterTextColor="@color/error"
@@ -31,7 +32,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Save"
-            app:cornerRadius="8sp" />
+            android:padding="16dp"
+            android:backgroundTint="@color/grey"
+            android:layout_marginHorizontal="30sp"
+            app:cornerRadius="10sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
