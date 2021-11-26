@@ -22,24 +22,6 @@
             android:layout_margin="20sp"
             app:riv_oval="true"/>
 
-        <ImageView
-            android:id="@+id/addSign"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/ic_add"
-            android:layout_gravity="top|center"
-            android:layout_marginTop="35sp"/>
-
-        <TextView
-            android:id="@+id/textAddImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/add_image"
-            android:layout_marginTop="15sp"
-            android:textColor="@color/white"
-            android:textSize="20dp"/>
-
     </FrameLayout>
 
     <com.google.android.material.textfield.TextInputLayout

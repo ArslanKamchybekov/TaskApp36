@@ -1,17 +1,17 @@
 package kg.geektech.taskapp36.ui.profile;
 
-import static android.content.Context.MODE_PRIVATE;
-
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -21,44 +21,23 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
-import com.google.android.gms.auth.api.Auth;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
-
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.util.concurrent.Executor;
 
 import kg.geektech.taskapp36.R;
 import kg.geektech.taskapp36.databinding.FragmentProfileBinding;
+import kg.geektech.taskapp36.prefs.Prefs;
 
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
-    public static final String SHARED_PREF = "shared";
-    public static final String TEXT = "text";
     private FirebaseAuth auth;
     private GoogleSignInClient googleSignInClient;
+    private ActivityResultLauncher<Intent> activityResultLauncher;
+    private Prefs prefs;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,33 +54,45 @@ public class ProfileFragment extends Fragment {
         initGoogle();
         setListeners();
         auth = FirebaseAuth.getInstance();
+        initViews();
+    }
+
+    private void initViews() {
+        prefs = new Prefs(requireContext());
+
+        if (prefs.getString() != null) {
+            binding.editName.setText(prefs.getString());
+        }
+
+        if (prefs.getStringImg() != null) {
+            Glide.with(requireContext()).load(Uri.parse(prefs.getStringImg())).into(binding.imageProfile);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (!binding.editName.getText().toString().isEmpty()) {
+            prefs.setString(binding.editName.getText().toString());
+        }
     }
 
     private void setListeners() {
-        binding.imageProfile.setOnClickListener(view1 -> {
+        activityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        Uri uri = result.getData().getData();
+                        prefs.setStringImg(uri.toString());
+                        binding.imageProfile.setImageURI(uri);
+                    }
+                });
+
+        binding.imageProfile.setOnClickListener(view -> {
             Intent intent = new Intent(Intent.ACTION_PICK);
             intent.setType("image/*");
-            binding.addSign.setVisibility(View.GONE);
-            binding.textAddImage.setVisibility(View.GONE);
-            galleryActivityResultLauncher.launch(intent);
+            activityResultLauncher.launch(intent);
         });
-
-        binding.editName.setOnClickListener(view -> {
-            String getString = binding.editName.getText().toString().trim();
-            binding.editName.setText(getString);
-
-            SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(TEXT, binding.editName.getText().toString());
-            editor.apply();
-        });
-        updateName();
-    }
-
-    private void updateName() {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
-        String text = sharedPreferences.getString(TEXT, "");
-        binding.editName.setText(text);
     }
 
     @Override
@@ -152,21 +143,4 @@ public class ProfileFragment extends Fragment {
         AlertDialog alert11 = builder1.create();
         alert11.show();
     }
-
-    private ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK){
-                        Intent data = result.getData();
-                        Uri imageUri = data.getData();
-                        binding.imageProfile.setImageURI(imageUri);
-                    }
-                    else {
-                        Toast.makeText(requireContext(), "Error...", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-    );
 }

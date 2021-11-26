@@ -39,7 +39,7 @@
         tools:layout="@layout/fragment_board" />
     <fragment
         android:id="@+id/loginFragment"
-        android:name="kg.geektech.taskapp36.ui.activities.login.LoginFragment"
+        android:name="kg.geektech.taskapp36.ui.login.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" />
 </navigation>

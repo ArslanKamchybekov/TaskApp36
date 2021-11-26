@@ -36,7 +36,6 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private TaskAdapter adapter;
     private Task task;
-    private int pos;
     private boolean checker;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -52,13 +51,10 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         adapter = new TaskAdapter();
-        adapter.addItems(App.getInstance().getDatabase().taskDao().getAll());
-        adapter.lastToTop();
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onClick(int position) {
-                pos = position;
-                task = adapter.getItem(position);
+                Task task = adapter.getItem(position);
                 openFragment(task);
             }
 
@@ -76,17 +72,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initList();
         binding.fab.setOnClickListener(view1 -> {
-            pos = -1;
             openFragment(null);
-        });
-        getParentFragmentManager().setFragmentResultListener("rk_task", getViewLifecycleOwner(), (requestKey, result) -> {
-            task = (Task) result.getSerializable("task");
-            if (result.getSerializable("updated") != null) {
-                task = (Task) result.getSerializable("updated");
-                adapter.editItem(task, pos);
-            } else {
-                adapter.addItem(task);
-            }
         });
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
             @Override
@@ -98,11 +84,12 @@ public class HomeFragment extends Fragment {
 
     private void initList() {
         binding.recyclerView.setAdapter(adapter);
+        adapter.addItems(App.getInstance().getDatabase().taskDao().getAll());
     }
 
     private void openFragment(Task task) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable("task1", task);
+        bundle.putSerializable("task", task);
         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
         navController.navigate(R.id.taskFragment, bundle);
     }
@@ -117,14 +104,12 @@ public class HomeFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.fromAToZ) {
             if (!checker) {
-                adapter.fromAToZ();
+                adapter.addItems(App.getInstance().getDatabase().taskDao().getAllSortedByTitle());
                 checker = true;
             }
             return true;
         } else if (item.getItemId() == R.id.defaultList) {
-            adapter.clearList();
             adapter.addItems(App.getInstance().getDatabase().taskDao().getAll());
-            adapter.lastToTop();
             checker = false;
         }
         return super.onOptionsItemSelected(item);

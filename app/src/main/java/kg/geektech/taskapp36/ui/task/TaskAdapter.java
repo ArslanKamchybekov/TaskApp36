@@ -4,10 +4,13 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +38,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(list.get(position));
+        Glide.with(holder.getIvImage())
+                .load(list.get(position).getImgUri()).into(holder.getIvImage());
+
+        holder.getTextTitle().setText(list.get(position).getText());
         if (position % 2 == 0) {
             holder.textTitle.setTextColor(Color.parseColor("#000000"));
         } else {
@@ -46,16 +52,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
         return list.size();
-    }
-
-    public void addItem(Task task) {
-        list.add(0, task);
-        notifyItemInserted(list.indexOf(task));
-    }
-
-    public void editItem(Task task, int position) {
-        list.set(position, task);
-        notifyDataSetChanged();
     }
 
     public Task getItem(int position) {
@@ -72,41 +68,32 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     }
 
     public void addItems(List<Task> tasks) {
-        list.addAll(tasks);
-        notifyDataSetChanged();
-    }
-
-    public void fromAToZ() {
-        Collections.sort(list, (t1, t2) -> t1.getText().compareTo(t2.getText()));
-        notifyDataSetChanged();
-    }
-
-    public void clearList() {
         list.clear();
-        notifyDataSetChanged();
-    }
-
-    public void lastToTop() {
-        Collections.reverse(list);
+        list.addAll(tasks);
         notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textTitle;
+        private ImageView imgRecycler;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textTitle = itemView.findViewById(R.id.textTitle);
+            imgRecycler = itemView.findViewById(R.id.imgRecycler);
             itemView.setOnClickListener(view -> onItemClickListener.onClick(getAdapterPosition()));
             itemView.setOnLongClickListener(view -> {
                 onItemClickListener.onLongClick(getAdapterPosition());
                 return true;
             });
         }
+        public ImageView getIvImage() {
+            return imgRecycler;
+        }
 
-        public void bind(Task task) {
-            textTitle.setText(task.getText());
+        public TextView getTextTitle() {
+            return textTitle;
         }
     }
 }

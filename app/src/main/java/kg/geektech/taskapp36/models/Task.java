@@ -4,8 +4,6 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
-import java.util.Comparator;
-import java.util.List;
 
 @Entity
 public class Task implements Serializable {
@@ -14,10 +12,28 @@ public class Task implements Serializable {
     private long id;
     private String text;
     private long createdAt;
+    private String docId;
+    private String imgUri;
 
     public Task(String text, long createdAt) {
         this.text = text;
         this.createdAt = createdAt;
+    }
+
+    public String getDocId() {
+        return docId;
+    }
+
+    public String getImgUri() {
+        return imgUri;
+    }
+
+    public void setImgUri(String imgUri) {
+        this.imgUri = imgUri;
+    }
+
+    public void setDocId(String docId) {
+        this.docId = docId;
     }
 
     public long getId() {
@@ -42,6 +58,9 @@ public class Task implements Serializable {
 
     public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Task() {
     }
 }
 
